@@ -221,16 +221,13 @@
     <section id="weather">
       <h2>II. Wetter</h2>
       <p>Damit wir immer wissen, wie das Wetter wird, finden Sie hier die aktuelle Vorhersage für Cavallino‑Treporti:</p>
-      <a class="weatherwidget-io" href="https://forecast7.com/de/45d44n12d44/cavallino-treporti/" data-label_1="Cavallino‑Treporti" data-label_2="Wetter" data-theme="dark" >Wetter Cavallino</a>
-      <script>
-        !function(d,s,id){
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if(!d.getElementById(id)){
-            js = d.createElement(s); js.id = id; js.src = 'https://weatherwidget.io/js/widget.min.js';
-            fjs.parentNode.insertBefore(js, fjs);
-          }
-        }(document, 'script', 'weatherwidget-io-js');
-      </script>
+      <!-- Wetter-Widget von weatherwidget.io.  Die Schaltfläche lädt die Vorhersage für Cavallino‑Treporti.  
+           Hinweis: Der externe Script wird am Ende der Seite eingebunden, um die Leistung zu verbessern.  Wenn das Widget nicht
+           geladen werden kann (z.B. bei fehlender Internetverbindung), steht ein Link zur Wetter‑Website zur Verfügung. -->
+      <a class="weatherwidget-io" href="https://forecast7.com/de/45d44n12d44/cavallino-treporti/" data-label_1="Cavallino‑Treporti" data-label_2="Wetter" data-theme="dark">Wetter Cavallino</a>
+      <noscript>
+        Für die Wettervorhersage klicken Sie <a href="https://weather.com/de-DE/wetter/heute/l/45.44,12.44" target="_blank" rel="noopener">hier</a>.
+      </noscript>
     </section>
 
     <!-- Plan section -->
@@ -422,6 +419,19 @@
       </p>
     </section>
   </main>
+
+  <!-- Wetter‑Widget Script: einmaliger Import am Seitenende, damit der Code im Wetterabschnitt funktioniert -->
+  <script>
+    !function(d,s,id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if(!d.getElementById(id)){
+        js = d.createElement(s);
+        js.id = id;
+        js.src = 'https://weatherwidget.io/js/widget.min.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }
+    }(document, 'script', 'weatherwidget-io-js');
+  </script>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
