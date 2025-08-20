@@ -483,7 +483,8 @@
       "Aktivitäten": activities
     };
 
-    L.control.layers(null, overlays, { collapsed: false }).addTo(map);
+    // Collapse the layer control by default so it doesn't cover the map on mobile devices.
+    L.control.layers(null, overlays, { collapsed: true }).addTo(map);
   </script>
 </body>
 </html>
