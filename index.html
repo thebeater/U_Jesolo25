@@ -6,6 +6,7 @@
   <title>Camping Marina di Venezia & Jesolo – Urlaub 2025</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     :root {
       --bg: #0a192f;
@@ -157,27 +158,9 @@
       height: auto;
       border-radius: 8px;
     }
-    /* Webcams */
-    .webcam-grid {
-      display: grid;
-      gap: 20px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* Webcam Stream Wrapper */
+    .video-wrapper {
       margin-top: 20px;
-    }
-    .webcam-card {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .webcam-card h3 {
-      margin-top: 0;
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
-    .webcam-card a {
-      color: var(--primary-color);
-      text-decoration: none;
     }
     .webcam-card a:hover {
       text-decoration: underline;
@@ -482,16 +465,9 @@
     <!-- Webcams section -->
     <section id="webcams">
       <h2>VI. Live‑Webcams</h2>
-      <p>Für einen schnellen Eindruck von Strand, Poollandschaft und Piazza zeigen die folgenden Bilder alle 60 Sekunden das aktuelle Webcam‑Bild aus dem Campingplatz. Die Streams der offiziellen Seite können aus Sicherheitsgründen nicht direkt eingebettet werden, daher laden wir stattdessen regelmäßig das aktuellste Standbild. Ein Klick auf die Überschrift öffnet die Original‑Livecam in einem neuen Tab.</p>
-      <div class="webcam-grid">
-        <div class="webcam-card">
-          <h3><a href="https://www.marinadivenezia.it/de/live-cam" target="_blank" rel="noopener">Pool & AquaMarina</a></h3>
-          <img id="webcam1" src="https://images.webcamgalore.com/3717-current-webcam-Punta-Sabbioni.jpg" alt="Live Pool Cam">
-        </div>
-        <div class="webcam-card">
-          <h3><a href="https://www.marinadivenezia.it/de/live-cam" target="_blank" rel="noopener">Strand & Piazza</a></h3>
-          <img id="webcam2" src="https://images.webcamgalore.com/3717-current-webcam-Punta-Sabbioni.jpg" alt="Live Strand Cam">
-        </div>
+      <p>Jetzt noch besser: Der Live‑Stream aus dem Campingplatz wird direkt eingebunden. Sollte die Wiedergabe fehlschlagen (zum Beispiel durch fehlende Cookie‑Freigabe oder Browser‑Einschränkungen), können Sie den Stream über <a href="https://www.marinadivenezia.it/de/live-cam" target="_blank" rel="noopener">die offizielle Livecam‑Seite</a> öffnen.</p>
+      <div class="video-wrapper">
+        <video id="webcamVideo" controls autoplay muted playsinline style="width:100%;height:auto;background:#000;"></video>
       </div>
     </section>
 
@@ -638,17 +614,25 @@
     updateWeather();
     setInterval(updateWeather, 60 * 60 * 1000);
 
-    // -------- Webcams aktualisieren --------
-    function refreshWebcams() {
-      const cam1 = document.getElementById('webcam1');
-      const cam2 = document.getElementById('webcam2');
-      if (cam1) cam1.src = 'https://images.webcamgalore.com/3717-current-webcam-Punta-Sabbioni.jpg?ts=' + Date.now();
-      if (cam2) cam2.src = 'https://images.webcamgalore.com/3717-current-webcam-Punta-Sabbioni.jpg?ts=' + (Date.now() + 5000);
-    }
-    refreshWebcams();
-    setInterval(refreshWebcams, 60 * 1000);
+    // -------- Webcam Stream einbinden --------
+    document.addEventListener('DOMContentLoaded', function() {
+      const videoEl = document.getElementById('webcamVideo');
+      if (videoEl) {
+        const streamURL = 'https://stream1.panocloud.com/marinadivenezia/marinadivenezia.stream/playlist.m3u8';
+        if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+          videoEl.src = streamURL;
+        } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(streamURL);
+          hls.attachMedia(videoEl);
+        } else {
+          const msg = document.createElement('p');
+          msg.style.color = 'var(--text)';
+          msg.textContent = 'Ihr Browser unterstützt das HLS‑Streaming nicht. Bitte öffnen Sie die Livecam direkt über den Link oben.';
+          videoEl.parentNode.appendChild(msg);
+        }
+      }
+    });
   </script>
 </body>
 </html>
-
-
