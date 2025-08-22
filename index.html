@@ -192,11 +192,41 @@
     .weather-container {
       margin-top: 15px;
     }
-    .weather-grid {
+    /* Wetterdarstellung */
+    .current-weather {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 0.95rem;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+    .current-weather .icon {
+      font-size: 2.4rem;
+    }
+    .current-weather .temp {
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+    }
+    .forecast-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    .forecast-card .icon {
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+    .forecast-card .day {
+      font-weight: 600;
+      margin-bottom: 2px;
+      font-size: 0.9rem;
     }
     #map {
       width: 100%;
@@ -552,13 +582,30 @@
         const codes = {
           0: 'Klar', 1: 'Überwiegend klar', 2: 'Teils bewölkt', 3: 'Bewölkt', 45: 'Nebel', 48: 'Reifiger Nebel', 51: 'Leichter Nieselregen', 53: 'Mäßiger Nieselregen', 55: 'Starker Nieselregen', 61: 'Leichter Regen', 63: 'Mäßiger Regen', 65: 'Starker Regen', 71: 'Leichter Schneefall', 73: 'Mäßiger Schneefall', 75: 'Starker Schneefall', 80: 'Regenschauer', 81: 'Heftige Regenschauer', 82: 'Extrem starke Regenschauer', 95: 'Gewitter', 96: 'Gewitter mit leichtem Hagel', 99: 'Gewitter mit schwerem Hagel'
         };
-        let html = '<div class="weather-grid">';
-        html += `<div><strong>Aktuell:</strong> ${current.temperature.toFixed(1)}°C, ${codes[current.weathercode] || ''}</div>`;
-        for (let i = 0; i < daily.time.length && i < 4; i++) {
+        // Zuordnung von Codes zu Emojis für eine intuitive Darstellung
+        const icons = {
+          0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️',
+          51: '🌦️', 53: '🌦️', 55: '🌦️', 61: '🌧️', 63: '🌧️', 65: '🌧️',
+          71: '❄️', 73: '❄️', 75: '❄️', 80: '🌧️', 81: '🌧️', 82: '🌧️',
+          95: '⛈️', 96: '⛈️', 99: '⛈️'
+        };
+        let html = '';
+        // Aktuelles Wetter
+        const currentIcon = icons[current.weathercode] || '☁️';
+        const currentDesc = codes[current.weathercode] || '';
+        html += `<div class="current-weather"><div class="icon">${currentIcon}</div><div class="details"><div class="temp">${current.temperature.toFixed(1)}°C</div><div>${currentDesc}</div></div></div>`;
+        // Vorhersage für die nächsten Tage
+        html += '<div class="forecast-grid">';
+        for (let i = 0; i < daily.time.length && i < 5; i++) {
           const date = new Date(daily.time[i]);
-          const day = date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' });
-          const desc = codes[daily.weathercode[i]] || '';
-          html += `<div>${day}: ${daily.temperature_2m_min[i].toFixed(0)}–${daily.temperature_2m_max[i].toFixed(0)}°C, ${desc}</div>`;
+          const dayName = date.toLocaleDateString('de-DE', { weekday: 'short' });
+          const dayNum = date.toLocaleDateString('de-DE', { day: 'numeric', month: 'numeric' });
+          const code = daily.weathercode[i];
+          const icon = icons[code] || '☁️';
+          const desc = codes[code] || '';
+          const tMin = daily.temperature_2m_min[i].toFixed(0);
+          const tMax = daily.temperature_2m_max[i].toFixed(0);
+          html += `<div class="forecast-card"><div class="day">${dayName} ${dayNum}</div><div class="icon">${icon}</div><div class="temp">${tMin}–${tMax}°C</div><div class="desc">${desc}</div></div>`;
         }
         html += '</div>';
         container.innerHTML = html;
