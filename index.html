@@ -158,9 +158,15 @@
       height: auto;
       border-radius: 8px;
     }
-    /* Webcam Stream Wrapper */
-    .video-wrapper {
+    /* Webcams */
+    .webcam-stream-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       margin-top: 20px;
+    }
+    .webcam-stream-card h3 {
+      margin-bottom: 8px;
     }
     .webcam-card a:hover {
       text-decoration: underline;
@@ -465,9 +471,16 @@
     <!-- Webcams section -->
     <section id="webcams">
       <h2>VI. Live‑Webcams</h2>
-      <p>Jetzt noch besser: Der Live‑Stream aus dem Campingplatz wird direkt eingebunden. Sollte die Wiedergabe fehlschlagen (zum Beispiel durch fehlende Cookie‑Freigabe oder Browser‑Einschränkungen), können Sie den Stream über <a href="https://www.marinadivenezia.it/de/live-cam" target="_blank" rel="noopener">die offizielle Livecam‑Seite</a> öffnen.</p>
-      <div class="video-wrapper">
-        <video id="webcamVideo" controls autoplay muted playsinline style="width:100%;height:auto;background:#000;"></video>
+      <p>Die beiden Livestreams zeigen das Geschehen im AquaMarina‑Park sowie am Strand und auf der Piazza des Campingplatzes. Wenn die Wiedergabe fehlschlägt, können Sie die Streams auf der <a href="https://www.marinadivenezia.it/de/live-cam" target="_blank" rel="noopener">offiziellen Livecam‑Seite</a> öffnen.</p>
+      <div class="webcam-stream-grid">
+        <div class="webcam-stream-card">
+          <h3>AquaMarina Park &amp; Pools</h3>
+          <video id="webcamVideo1" controls autoplay muted playsinline style="width:100%;height:auto;background:#000;"></video>
+        </div>
+        <div class="webcam-stream-card">
+          <h3>Strand &amp; Piazza</h3>
+          <video id="webcamVideo2" controls autoplay muted playsinline style="width:100%;height:auto;background:#000;"></video>
+        </div>
       </div>
     </section>
 
@@ -614,24 +627,29 @@
     updateWeather();
     setInterval(updateWeather, 60 * 60 * 1000);
 
-    // -------- Webcam Stream einbinden --------
+    // -------- Webcam Streams einbinden --------
     document.addEventListener('DOMContentLoaded', function() {
-      const videoEl = document.getElementById('webcamVideo');
-      if (videoEl) {
-        const streamURL = 'https://stream1.panocloud.com/marinadivenezia/marinadivenezia.stream/playlist.m3u8';
-        if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-          videoEl.src = streamURL;
-        } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-          const hls = new Hls();
-          hls.loadSource(streamURL);
-          hls.attachMedia(videoEl);
-        } else {
-          const msg = document.createElement('p');
-          msg.style.color = 'var(--text)';
-          msg.textContent = 'Ihr Browser unterstützt das HLS‑Streaming nicht. Bitte öffnen Sie die Livecam direkt über den Link oben.';
-          videoEl.parentNode.appendChild(msg);
+      const streams = [
+        { id: 'webcamVideo1', url: 'https://stream1.panocloud.com/marinadivenezia/marinadivenezia.stream/playlist.m3u8' },
+        { id: 'webcamVideo2', url: 'https://stream1.panocloud.com/marinadivenezia2/marinadivenezia2.stream/playlist.m3u8' }
+      ];
+      streams.forEach(({ id, url }) => {
+        const video = document.getElementById(id);
+        if (video) {
+          if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = url;
+          } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(url);
+            hls.attachMedia(video);
+          } else {
+            const msg = document.createElement('p');
+            msg.style.color = 'var(--text)';
+            msg.textContent = 'Ihr Browser unterstützt das HLS‑Streaming nicht. Bitte öffnen Sie die Livecam direkt über den Link oben.';
+            video.parentNode.appendChild(msg);
+          }
         }
-      }
+      });
     });
   </script>
 </body>
