@@ -157,6 +157,47 @@
       height: auto;
       border-radius: 8px;
     }
+    /* Webcams */
+    .webcam-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      margin-top: 20px;
+    }
+    .webcam-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .webcam-card h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+    .webcam-card a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    .webcam-card a:hover {
+      text-decoration: underline;
+    }
+    .webcam-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    /* Weather grid */
+    .weather-container {
+      margin-top: 15px;
+    }
+    .weather-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.95rem;
+    }
     #map {
       width: 100%;
       height: 500px;
@@ -222,14 +263,10 @@
     <!-- Weather section -->
     <section id="weather">
       <h2>II. Wetter</h2>
-      <p>Damit wir immer wissen, wie das Wetter wird, finden Sie hier die aktuelle Vorhersage für Cavallino‑Treporti:</p>
-      <!-- Wetter-Widget von weatherwidget.io.  Die Schaltfläche lädt die Vorhersage für Cavallino‑Treporti.  
-           Hinweis: Der externe Script wird am Ende der Seite eingebunden, um die Leistung zu verbessern.  Wenn das Widget nicht
-           geladen werden kann (z.B. bei fehlender Internetverbindung), steht ein Link zur Wetter‑Website zur Verfügung. -->
-      <a class="weatherwidget-io" href="https://forecast7.com/de/45d44n12d44/cavallino-treporti/" data-label_1="Cavallino‑Treporti" data-label_2="Wetter" data-theme="dark">Wetter Cavallino</a>
-      <noscript>
-        Für die Wettervorhersage klicken Sie <a href="https://weather.com/de-DE/wetter/heute/l/45.44,12.44" target="_blank" rel="noopener">hier</a>.
-      </noscript>
+      <p>Damit wir immer wissen, wie das Wetter wird, finden Sie hier eine automatisch geladene Vorhersage für Cavallino‑Treporti. Die Daten werden über den öffentlichen <a href="https://open-meteo.com" target="_blank" rel="noopener">Open‑Meteo‑Dienst</a> abgerufen und stündlich aktualisiert.</p>
+      <div id="weather-container" class="weather-container">
+        <p>Lade Wetterdaten …</p>
+      </div>
     </section>
 
     <!-- Plan section -->
@@ -405,9 +442,16 @@
     <!-- Webcams section -->
     <section id="webcams">
       <h2>VI. Live‑Webcams</h2>
-      <p>Für einen schnellen Eindruck von Strand, Poollandschaft und Piazza haben wir hier die offiziellen Live‑Streams des Campingplatzes eingebettet. Bitte beachten: je nach Browser müssen Cookies akzeptiert werden.</p>
+      <p>Für einen schnellen Eindruck von Strand, Poollandschaft und Piazza zeigen die folgenden Bilder alle 60 Sekunden das aktuelle Webcam‑Bild aus dem Campingplatz. Die Streams der offiziellen Seite können aus Sicherheitsgründen nicht direkt eingebettet werden, daher laden wir stattdessen regelmäßig das aktuellste Standbild. Ein Klick auf die Überschrift öffnet die Original‑Livecam in einem neuen Tab.</p>
       <div class="webcam-grid">
-        <iframe src="https://www.marinadivenezia.it/de/live-cam" width="100%" height="450" frameborder="0" loading="lazy" referrerpolicy="no-referrer" allowfullscreen></iframe>
+        <div class="webcam-card">
+          <h3><a href="https://www.marinadivenezia.it/de/live-cam" target="_blank" rel="noopener">Pool & AquaMarina</a></h3>
+          <img id="webcam1" src="https://images.webcamgalore.com/3717-current-webcam-Punta-Sabbioni.jpg" alt="Live Pool Cam">
+        </div>
+        <div class="webcam-card">
+          <h3><a href="https://www.marinadivenezia.it/de/live-cam" target="_blank" rel="noopener">Strand & Piazza</a></h3>
+          <img id="webcam2" src="https://images.webcamgalore.com/3717-current-webcam-Punta-Sabbioni.jpg" alt="Live Strand Cam">
+        </div>
       </div>
     </section>
 
@@ -431,18 +475,7 @@
     </section>
   </main>
 
-  <!-- Wetter‑Widget Script: einmaliger Import am Seitenende, damit der Code im Wetterabschnitt funktioniert -->
-  <script>
-    !function(d,s,id){
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if(!d.getElementById(id)){
-        js = d.createElement(s);
-        js.id = id;
-        js.src = 'https://weatherwidget.io/js/widget.min.js';
-        fjs.parentNode.insertBefore(js, fjs);
-      }
-    }(document, 'script', 'weatherwidget-io-js');
-  </script>
+  <!-- Die Wettervorhersage wird nun über das Open‑Meteo‑API per JavaScript abgerufen (siehe Skript) -->
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
@@ -506,6 +539,45 @@
 
     // Collapse the layer control by default so it doesn't cover the map on mobile devices.
     L.control.layers(null, overlays, { collapsed: true }).addTo(map);
+
+    // -------- Wetterdaten laden --------
+    async function updateWeather() {
+      const container = document.getElementById('weather-container');
+      if (!container) return;
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=45.44&longitude=12.44&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FBerlin');
+        const data = await res.json();
+        const current = data.current_weather;
+        const daily = data.daily;
+        const codes = {
+          0: 'Klar', 1: 'Überwiegend klar', 2: 'Teils bewölkt', 3: 'Bewölkt', 45: 'Nebel', 48: 'Reifiger Nebel', 51: 'Leichter Nieselregen', 53: 'Mäßiger Nieselregen', 55: 'Starker Nieselregen', 61: 'Leichter Regen', 63: 'Mäßiger Regen', 65: 'Starker Regen', 71: 'Leichter Schneefall', 73: 'Mäßiger Schneefall', 75: 'Starker Schneefall', 80: 'Regenschauer', 81: 'Heftige Regenschauer', 82: 'Extrem starke Regenschauer', 95: 'Gewitter', 96: 'Gewitter mit leichtem Hagel', 99: 'Gewitter mit schwerem Hagel'
+        };
+        let html = '<div class="weather-grid">';
+        html += `<div><strong>Aktuell:</strong> ${current.temperature.toFixed(1)}°C, ${codes[current.weathercode] || ''}</div>`;
+        for (let i = 0; i < daily.time.length && i < 4; i++) {
+          const date = new Date(daily.time[i]);
+          const day = date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' });
+          const desc = codes[daily.weathercode[i]] || '';
+          html += `<div>${day}: ${daily.temperature_2m_min[i].toFixed(0)}–${daily.temperature_2m_max[i].toFixed(0)}°C, ${desc}</div>`;
+        }
+        html += '</div>';
+        container.innerHTML = html;
+      } catch (err) {
+        container.textContent = 'Wetterdaten konnten nicht geladen werden.';
+      }
+    }
+    updateWeather();
+    setInterval(updateWeather, 60 * 60 * 1000);
+
+    // -------- Webcams aktualisieren --------
+    function refreshWebcams() {
+      const cam1 = document.getElementById('webcam1');
+      const cam2 = document.getElementById('webcam2');
+      if (cam1) cam1.src = 'https://images.webcamgalore.com/3717-current-webcam-Punta-Sabbioni.jpg?ts=' + Date.now();
+      if (cam2) cam2.src = 'https://images.webcamgalore.com/3717-current-webcam-Punta-Sabbioni.jpg?ts=' + (Date.now() + 5000);
+    }
+    refreshWebcams();
+    setInterval(refreshWebcams, 60 * 1000);
   </script>
 </body>
 </html>
