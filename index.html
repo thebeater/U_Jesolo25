@@ -297,11 +297,11 @@
   <button class="menu-toggle" aria-label="Menü">☰</button>
   <nav id="burger-menu" class="burger-menu">
     <a href="#willkommen">Willkommen</a>
+    <a href="#webcam">Webcams</a>
     <a href="#wetter">Wetter</a>
     <a href="#plan">10‑Tage‑Plan</a>
     <a href="#restaurants">Restaurants</a>
     <a href="#aktivitaeten">Aktivitäten</a>
-    <a href="#webcam">Webcams</a>
     <a href="#karte">Karte</a>
     <a href="#fazit">Fazit</a>
   </nav>
@@ -329,9 +329,26 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Canal_in_Venice_after_sunset.jpg/1280px-Canal_in_Venice_after_sunset.jpg" alt="Canal Grande in Venedig bei Sonnenuntergang" />
       </div>
     </section>
+    <!-- Live‑Webcams -->
+    <section id="webcam" class="fade-in">
+      <h2>II. Live‑Webcams</h2>
+      <p class="lead">Die beiden Livestreams zeigen das Geschehen im AquaMarina‑Park sowie am Strand und auf der Piazza des Campingplatzes. Wenn die Wiedergabe fehlschlägt, können Sie die Streams auf der <a href="https://www.marinadivenezia.it" target="_blank" rel="noopener">offiziellen Livecam‑Seite</a> öffnen.</p>
+      <div class="grid two">
+        <div class="card">
+          <h3>AquaMarina Park &amp; Pools</h3>
+          <!-- Video-Element für den AquaMarina‑Park. Wir verwenden HLS.js, um den Livestream abzuspielen. -->
+          <video id="video-aquamarina" controls muted playsinline style="width:100%; border-radius:8px; background:#000;"></video>
+        </div>
+        <div class="card">
+          <h3>Strand &amp; Piazza</h3>
+          <!-- Iframe für die Live‑Webcam am Strand & Piazza. Die originale Webcam wird direkt eingebettet. -->
+          <iframe src="https://marinadivenezia2.it-wms.com/" frameborder="0" allowfullscreen scrolling="no" style="width:100%; height:320px; border-radius:8px; background:#000;"></iframe>
+        </div>
+      </div>
+    </section>
     <!-- Wetter -->
     <section id="wetter" class="fade-in">
-      <h2>II. Wetter</h2>
+      <h2>III. Wetter</h2>
       <p class="lead">Damit Sie wissen, wie das Wetter wird, finden Sie hier die 10‑Tage‑Vorhersage für Cavallino‑Treporti für unseren Reisezeitraum vom 29.08. bis 07.09. Die Daten werden über den kostenlosen Open‑Meteo‑Dienst geladen.</p>
       <div id="weather-container">
         <p>Lade Wetterdaten …</p>
@@ -339,7 +356,7 @@
     </section>
     <!-- 10‑Tage‑Plan -->
     <section id="plan" class="fade-in">
-      <h2>III. 10‑Tage‑Plan</h2>
+      <h2>IV. 10‑Tage‑Plan</h2>
       <!-- Jeden Tag als Details‑Element -->
       <details>
         <summary>Tag 1 (29.08.) – Anreise &amp; Kennenlernen</summary>
@@ -384,7 +401,7 @@
     </section>
     <!-- Restaurants &amp; Essen -->
     <section id="restaurants" class="fade-in">
-      <h2>IV. Restaurants &amp; Essen</h2>
+      <h2>V. Restaurants &amp; Essen</h2>
       <p class="lead">Eine Auswahl unserer kulinarischen Favoriten, sowohl auf dem Campingplatz als auch in der Umgebung.</p>
       <div class="grid two">
         <div class="card">
@@ -416,7 +433,7 @@
     </section>
     <!-- Aktivitäten &amp; Freizeit -->
     <section id="aktivitaeten" class="fade-in">
-      <h2>V. Aktivitäten &amp; Freizeit</h2>
+      <h2>VI. Aktivitäten &amp; Freizeit</h2>
       <div class="grid two">
         <div class="card">
           <h3>Für Kinder</h3>
@@ -441,23 +458,6 @@
         <div class="card">
           <h3>Mietfahrräder</h3>
           <p>Im <strong>Leo Bike Rental</strong> können City‑Bikes, Mountainbikes, Trekkingräder, Kinderräder, Anhänger und sogar Elektro‑Carts gemietet werden. Ein Preisverzeichnis (Stand Mai 2023) ist vor Ort verfügbar. Der Verleih befindet sich beim Eingang des Campingplatzes und ist täglich geöffnet.</p>
-        </div>
-      </div>
-    </section>
-    <!-- Live‑Webcams -->
-    <section id="webcam" class="fade-in">
-      <h2>VI. Live‑Webcams</h2>
-      <p class="lead">Die beiden Livestreams zeigen das Geschehen im AquaMarina‑Park sowie am Strand und auf der Piazza des Campingplatzes. Wenn die Wiedergabe fehlschlägt, können Sie die Streams auf der <a href="https://www.marinadivenezia.it" target="_blank" rel="noopener">offiziellen Livecam‑Seite</a> öffnen.</p>
-      <div class="grid two">
-        <div class="card">
-          <h3>AquaMarina Park &amp; Pools</h3>
-          <!-- Video-Element für den AquaMarina‑Park. Wir verwenden HLS.js, um den Livestream abzuspielen. -->
-          <video id="video-aquamarina" controls muted playsinline style="width:100%; border-radius:8px; background:#000;"></video>
-        </div>
-        <div class="card">
-          <h3>Strand &amp; Piazza</h3>
-          <!-- Video-Element für Strand & Piazza. Aktuell wird derselbe Stream verwendet wie für den AquaMarina‑Park. -->
-          <video id="video-piazza" controls muted playsinline style="width:100%; border-radius:8px; background:#000;"></video>
         </div>
       </div>
     </section>
@@ -634,7 +634,6 @@
       // Quelle des Livestreams – HLS‑Format
       var streamUrl = 'https://stream1.panocloud.com/marinadivenezia/marinadivenezia.stream/playlist.m3u8';
       setupLive('video-aquamarina', streamUrl);
-      setupLive('video-piazza', streamUrl);
     })();
   </script>
 </body>
