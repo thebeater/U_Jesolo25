@@ -332,12 +332,20 @@
     <!-- Live‑Webcams -->
     <section id="webcam" class="fade-in">
       <h2>II. Live‑Webcams</h2>
-      <p class="lead">Die beiden Livestreams zeigen das Geschehen im AquaMarina‑Park sowie am Strand und auf der Piazza des Campingplatzes. Wenn die Wiedergabe fehlschlägt, können Sie die Streams auf der <a href="https://www.marinadivenezia.it" target="_blank" rel="noopener">offiziellen Livecam‑Seite</a> öffnen.</p>
+      <p class="lead">Die beiden Livestreams zeigen das Geschehen im AquaMarina‑Park sowie am Strand und auf der Piazza des Campingplatzes. Wenn die Wiedergabe fehlschlägt, können Sie die Streams auf der <a href="https://www.marinadivenezia.it/de/live-cam" target="_blank" rel="noopener">offiziellen Livecam‑Seite</a> öffnen.</p>
       <div class="grid two">
         <div class="card">
           <h3>AquaMarina Park &amp; Pools</h3>
-          <!-- Video-Element für den AquaMarina‑Park. Wir verwenden HLS.js, um den Livestream abzuspielen. -->
-          <video id="video-aquamarina" controls muted playsinline style="width:100%; border-radius:8px; background:#000;"></video>
+          <!-- Iframe für die Live‑Webcam am AquaMarina‑Park. Wir verwenden denselben Typ wie für den Strand, um ein einheitliches Verhalten zu gewährleisten. -->
+          <iframe
+            src="https://marinadivenezia.it-wms.com/"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            scrolling="no"
+            style="width:100%; height:320px; border-radius:8px; background:#000;"
+            title="AquaMarina Park &amp; Pools Livecam"
+          ></iframe>
         </div>
         <div class="card">
           <h3>Strand &amp; Piazza</h3>
@@ -493,8 +501,6 @@
   <button id="back-to-top" aria-label="Nach oben">↑</button>
   <!-- Leaflet script -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
-  <!-- HLS.js für die Livestreams -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
     // Scroll‑Indikator und Zurück‑nach‑oben‑Button
     const scrollIndicator = document.getElementById('scroll-indicator');
@@ -624,25 +630,6 @@
     // initiale Filter anwenden
     updateFilters();
 
-    // Livestream‑Initialisierung
-    (function initializeStreams() {
-      // Prüfen, ob HLS unterstützt wird und Streamquelle definieren
-      function setupLive(id, url) {
-        var video = document.getElementById(id);
-        if (!video) return;
-        if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-          var hls = new Hls();
-          hls.loadSource(url);
-          hls.attachMedia(video);
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          // native Unterstützung, z. B. in Safari
-          video.src = url;
-        }
-      }
-      // Quelle des Livestreams – HLS‑Format
-      var streamUrl = 'https://stream1.panocloud.com/marinadivenezia/marinadivenezia.stream/playlist.m3u8';
-      setupLive('video-aquamarina', streamUrl);
-    })();
   </script>
 </body>
 </html>
