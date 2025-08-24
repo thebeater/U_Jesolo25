@@ -199,6 +199,13 @@
     .marker-restaurant {
       background: var(--orange);
     }
+
+    /* Responsive Anpassung: bei kleinen Bildschirmen eine Spalte für Zweier‑Grids */
+    @media (max-width: 600px) {
+      .grid.two {
+        grid-template-columns: 1fr !important;
+      }
+    }
     .marker-activity {
       background: var(--blue);
     }
@@ -312,6 +319,7 @@
     <div class="actions">
       <a class="btn primary" href="#plan">Zum 10‑Tage‑Plan</a>
       <a class="btn" href="#wetter">Live‑Wetter</a>
+      <a class="btn" href="#webcam">Webcams</a>
       <a class="btn" href="#restaurants">Restaurants</a>
       <a class="btn" href="#aktivitaeten">Aktivitäten</a>
       <a class="btn" href="#karte">Karte</a>
@@ -337,28 +345,24 @@
         <div class="card">
           <h3>AquaMarina Park &amp; Pools</h3>
           <!-- Iframe für die Live‑Webcam am AquaMarina‑Park. Wir verwenden denselben Typ wie für den Strand, um ein einheitliches Verhalten zu gewährleisten. -->
-          <iframe
-            src="https://marinadivenezia.it-wms.com/"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen
-            scrolling="no"
+          <video
+            id="video-aquamarina"
+            controls
+            muted
+            playsinline
             style="width:100%; height:320px; border-radius:8px; background:#000;"
-            title="AquaMarina Park &amp; Pools Livecam"
-          ></iframe>
+          ></video>
         </div>
         <div class="card">
           <h3>Strand &amp; Piazza</h3>
           <!-- Iframe für die Live‑Webcam am Strand & Piazza. Die originale Webcam wird direkt eingebettet. -->
-          <iframe
-            src="https://marinadivenezia2.it-wms.com/"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen
-            scrolling="no"
+          <video
+            id="video-strand"
+            controls
+            muted
+            playsinline
             style="width:100%; height:320px; border-radius:8px; background:#000;"
-            title="Strand &amp; Piazza Livecam"
-          ></iframe>
+          ></video>
         </div>
       </div>
     </section>
@@ -384,7 +388,7 @@
       </details>
       <details>
         <summary>Tag 3 (31.08.) – Strand &amp; Freizeit</summary>
-        <p>Wir genießen den kilometerlangen Sandstrand, spielen Beachvolleyball oder mieten Fahrräder beim <strong>Leo Bike Rental</strong> – hier gibt es Räder, Anhänger und sogar Elektro‑Carts für alle Altersgruppen. Am Nachmittag fahren die Kinder mit dem kleinen Bähnchen vom Campingplatz zum Strand, während die Eltern im Wellnessbereich relaxen.</p>
+        <p>Wir genießen den kilometerlangen Sandstrand, spielen Beachvolleyball oder mieten Fahrräder beim <strong>Leo Bike Rental</strong> – hier gibt es Räder, Anhänger und sogar Elektro‑Carts für alle Altersgruppen. Nähere Informationen finden Sie im Abschnitt <em>Mietfahrräder</em> unter <strong>Aktivitäten</strong>. Am Nachmittag fahren die Kinder mit dem kleinen Bähnchen vom Campingplatz zum Strand, während die Eltern im Wellnessbereich relaxen.</p>
       </details>
       <details>
         <summary>Tag 4 (01.09.) – Venedig entdecken</summary>
@@ -396,7 +400,7 @@
       </details>
       <details>
         <summary>Tag 6 (03.09.) – Fahrradtour nach Lio Piccolo</summary>
-        <p>Eine Radtour durch die Lagunenlandschaft führt uns ins verträumte Fischerdorf <strong>Lio Piccolo</strong>. Unterwegs beobachten wir Flamingos und andere Vögel. Räder und Anhänger können vorab beim <strong>Leo Bike Rental</strong> reserviert werden.</p>
+        <p>Eine Radtour durch die Lagunenlandschaft führt uns ins verträumte Fischerdorf <strong>Lio Piccolo</strong>. Unterwegs beobachten wir Flamingos und andere Vögel. Räder und Anhänger können vorab beim Verleih reserviert werden – siehe Abschnitt <em>Mietfahrräder</em> für Details.</p>
       </details>
       <details>
         <summary>Tag 7 (04.09.) – Sport &amp; Action</summary>
@@ -418,30 +422,34 @@
     <!-- Restaurants &amp; Essen -->
     <section id="restaurants" class="fade-in">
       <h2>V. Restaurants &amp; Essen</h2>
-      <p class="lead">Eine Auswahl unserer kulinarischen Favoriten, sowohl auf dem Campingplatz als auch in der Umgebung.</p>
+      <p class="lead">Eine Auswahl unserer kulinarischen Favoriten. Die Lokale sind nach Lage sortiert.</p>
+      <h3>Im&nbsp;Camping</h3>
       <div class="grid two">
         <div class="card">
-          <h3>PiacerMio (im Camping)</h3>
+          <h4>PiacerMio</h4>
           <p>Elegantes Restaurant nahe der Rezeption mit Glasfront, gestaltet vom Architekten Matteo Thun. Chef Giulio serviert saisonale Gerichte aus regionalen Produkten; es gibt Frühstück, Eisbar, Mittag‑ und Abendessen. Ideal zum Starten des Tages oder für ein stilvolles Dinner.</p>
           <p class="tip"><strong>Öffnungszeiten:</strong> täglich von morgens bis spätabends.</p>
         </div>
         <div class="card">
-          <h3>Calici e Mare – Chiosco Verde (im Camping)</h3>
-          <p>Gemütliches Strandlokal mit zeitgenössischer Küche und großer Weinauswahl. Direkt am Meer gelegen, ideal für einen Sundowner und frische Fischgerichte.</p>
+          <h4>Calici e Mare – Chiosco Verde</h4>
+          <p>Gemütliches Strandlokal mit zeitgenössischer Küche und großer Weinauswahl. Direkt am Meer gelegen – perfekt für einen Sundowner und frische Fischgerichte.</p>
           <p class="tip"><strong>Öffnungszeiten:</strong> 18:00–23:00 Uhr (Schätzung; Reservierung empfohlen).</p>
         </div>
+      </div>
+      <h3>Außerhalb des&nbsp;Platzes</h3>
+      <div class="grid two">
         <div class="card">
-          <h3>La Pergola Ristorante Pizzeria</h3>
+          <h4>La Pergola Ristorante Pizzeria</h4>
           <p>Familienfreundliches Lokal an der Via Baracca 90 mit traditionellen venezianischen Gerichten, Fisch‑ und Fleischspezialitäten, vegetarischen und laktosefreien Optionen sowie einem großen Spielplatz „Pergoland”.</p>
           <p class="tip"><strong>Öffnungszeiten:</strong> täglich 12:00–14:30 Uhr und 18:00–23:00 Uhr.</p>
         </div>
         <div class="card">
-          <h3>Ristorante Alla Fattoria</h3>
+          <h4>Ristorante Alla Fattoria</h4>
           <p>Italienische Küche und Pizza in rustikalem Ambiente mit freundlichem Service. Große Terrasse und typisch venezianische Spezialitäten.</p>
           <p class="tip"><strong>Adresse:</strong> Via Fausta 245, Cavallino‑Treporti<br /><strong>Öffnungszeiten:</strong> täglich 18:00–22:00 Uhr; sonntags zusätzlich 12:00–14:00 Uhr.</p>
         </div>
         <div class="card">
-          <h3>Trattoria Laguna &amp; Lievitati Naturali</h3>
+          <h4>Trattoria Laguna &amp; Lievitati Naturali</h4>
           <p>Ruhig gelegene Trattoria mit Panoramaterrasse. Bekannt für frische Meeresfrüchte und glutenfreie Pizza mit natürlicher Hefung; kinderfreundlich und sehr beliebt.</p>
           <p class="tip"><strong>Adresse:</strong> Via Pordelio 444, Treporti<br /><strong>Öffnungszeiten:</strong> abends; Reservierung empfohlen.</p>
         </div>
@@ -456,7 +464,7 @@
           <ul>
             <li>AquaMarina Park: Großer Wasserpark mit mehreren beheizten und unbeheizten Pools, Rutschen, Wasserspielplatz und Wellenbad.</li>
             <li>Leo Park &amp; Miniclub: Spielplatz mit Kletteranlagen, Hüpfburgen und täglichem Animationsprogramm wie Baby‑Dance und Strandspiele.</li>
-            <li>Leo Bike Rental: Fahrradverleih mit großer Auswahl an Rädern, Anhängern, Karren und Elektrofahrzeugen; freundliches Personal und Reparaturservice.</li>
+            <li>Fahrradfahren: Der Verleih am Campingplatz bietet Räder und Anhänger für die ganze Familie. Weitere Details und Preise finden Sie im Abschnitt <em>Mietfahrräder</em> weiter unten.</li>
             <li>Mini‑Zug: Der kleine Zug bringt Kinder bequem vom Campingplatz zum Strand und zurück.</li>
             <li>Ausflüge: Bootstouren zu den Inseln Burano, Murano und Torcello sowie Fahrradtouren nach Lio Piccolo.</li>
           </ul>
@@ -482,9 +490,9 @@
       <h2>VII. Karte &amp; Übersicht</h2>
       <p class="lead">Auf der interaktiven Karte sind Camping‑Restaurants, Restaurants außerhalb und Aktivitäten markiert. Über die Filter können einzelne Kategorien ein‑ oder ausgeblendet werden. Ein Klick auf einen Marker öffnet weitere Informationen.</p>
       <div id="map-filters">
-        <label><input type="checkbox" id="filter-camping" value="camping" checked /> Camping</label>
-        <label><input type="checkbox" id="filter-restaurant" value="restaurant" checked /> Restaurants außerhalb</label>
-        <label><input type="checkbox" id="filter-activity" value="activity" checked /> Aktivitäten</label>
+        <label title="Restaurants und Einrichtungen auf dem Campingplatz"><input type="checkbox" id="filter-camping" value="camping" checked /> Camping</label>
+        <label title="Restaurants außerhalb des Campingplatzes"><input type="checkbox" id="filter-restaurant" value="restaurant" checked /> Restaurants außerhalb</label>
+        <label title="Freizeitangebote und Aktivitäten"><input type="checkbox" id="filter-activity" value="activity" checked /> Aktivitäten</label>
       </div>
       <div id="leaflet-map"></div>
     </section>
@@ -501,6 +509,8 @@
   <button id="back-to-top" aria-label="Nach oben">↑</button>
   <!-- Leaflet script -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+  <!-- HLS.js für die Livestreams -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
     // Scroll‑Indikator und Zurück‑nach‑oben‑Button
     const scrollIndicator = document.getElementById('scroll-indicator');
@@ -629,6 +639,27 @@
     document.getElementById('filter-activity').addEventListener('change', updateFilters);
     // initiale Filter anwenden
     updateFilters();
+
+    // Livestream‑Initialisierung für beide Webcams
+    (function initializeStreams() {
+      function setupLive(id, url) {
+        var video = document.getElementById(id);
+        if (!video) return;
+        if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+          var hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          // native Unterstützung, z. B. in Safari
+          video.src = url;
+        }
+      }
+      var stream1 = 'https://stream1.panocloud.com/marinadivenezia/marinadivenezia.stream/playlist.m3u8';
+      // Zweite Kamera (Strand & Piazza) – Musterlink. Sollte die Wiedergabe fehlschlagen, kann die Quelle angepasst werden.
+      var stream2 = 'https://stream1.panocloud.com/marinadivenezia2/marinadivenezia2.stream/playlist.m3u8';
+      setupLive('video-aquamarina', stream1);
+      setupLive('video-strand', stream2);
+    })();
 
   </script>
 </body>
